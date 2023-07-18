@@ -25,7 +25,8 @@ func main() {
 	registerChannelRoutes(r)
 	registerDebugRoutes(r)
 
-	http.ListenAndServe(":80", r)
+	err := http.ListenAndServe(":8080", r)
+	fmt.Printf("HTTP Server exited: %s", err)
 }
 
 func initTwitch() {
@@ -71,24 +72,22 @@ func registerChannelRoutes(r *mux.Router) {
 		vars := mux.Vars(r)
 		channel_login := vars["channel_login"]
 
-		result := channelAdd(channel_login)
-		if result {
-			fmt.Fprintln(w, "Added!")
-		} else {
-			fmt.Fprintln(w, "Created!")
-		}
+		fmt.Fprintln(w, channelAdd(channel_login))
 	})
 }
 
-func channelAdd(channel_login string) bool {
+func channelAdd(channel_login string) string {
+	var result string
 	users, ok := Model[channel_login]
 	if ok {
 		users = append(users, "NewUser")
-		return true
+		result = "Added!"
 	} else {
 		users = append(users, "FirstUser")
-		return false
+		result = "Created!"
 	}
+	Model[channel_login] = users
+	return result
 }
 
 func registerDebugRoutes(r *mux.Router) {
