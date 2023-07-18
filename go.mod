@@ -1,4 +1,4 @@
-module kingfrogkrew.biz/advancednotifier-ttv-server
+module github.com/acevenoms/AdvancedNotifierTTV-Server
 
 go 1.20
 
